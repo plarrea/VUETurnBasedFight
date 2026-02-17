@@ -7,7 +7,8 @@ const app = Vue.createApp({
     return {
       playerHealth: 100,
       monsterHealth: 100,
-      currentRound: 0
+      currentRound: 0,
+      winner: null
     }
   },
   computed: {
@@ -21,12 +22,31 @@ const app = Vue.createApp({
       return this.currentRound % 3 !== 0
     }
   },
+  watch: {
+    playerHealth(value) {
+      if(value <= 0 && this.monsterHealth <= 0){
+        // a draw
+        this.winner = 'draw'
+      } else if (value <= 0) {
+        // Player lost
+        this.winner = 'monster'
+      }
+    },
+    monsterHealth(value) {
+      if(value <= 0 && this.playerHealth <= 0){
+        // a draw
+        this.winner = 'draw'
+      } else if (value <= 0) {
+        // Monster lost
+        this.winner = 'player'
+      }
+    }
+  },
   methods: {
     attackMonster() {
       this.currentRound++
       // deal between 5 and 12 damage
       const damage = getRandomValue(5, 12)
-      this.monsterHealth -= damage
       if (this.monsterHealth - damage < 0) {
         this.monsterHealth = 0
       } else {
