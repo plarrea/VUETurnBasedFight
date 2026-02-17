@@ -13,9 +13,11 @@ const app = Vue.createApp({
   },
   computed: {
     monsterBarStyles() {
+      if(this.monsterHealth < 0) return { width: 0 }
       return { width: `${this.monsterHealth}%` }
     },
     playerBarStyles() {
+      if(this.playerHealth < 0) return { width: 0 }
       return { width: `${this.playerHealth}%` }
     },
     canUseSpecialAttack() {
@@ -47,31 +49,19 @@ const app = Vue.createApp({
       this.currentRound++
       // deal between 5 and 12 damage
       const damage = getRandomValue(5, 12)
-      if (this.monsterHealth - damage < 0) {
-        this.monsterHealth = 0
-      } else {
-        this.monsterHealth -= damage;
-      }
+      this.monsterHealth -= damage;
       this.attackPlayer()
     },
     attackPlayer() {
       // deal between 8 and 15 damage
       const damage = getRandomValue(8, 15)
-      if (this.playerHealth - damage < 0) {
-        this.playerHealth = 0
-      } else {
-        this.playerHealth -= damage;
-      }
+      this.playerHealth -= damage;
     },
     specialAttackMonster() {
       this.currentRound++
       // deal between 10 and 25 damage
       const damage = getRandomValue(10, 25)
-      if (this.monsterHealth - damage < 0) {
-        this.monsterHealth = 0
-      } else {
-        this.monsterHealth -= damage;
-      }
+      this.monsterHealth -= damage;
       this.attackPlayer()
     },
     healPlayer() {
